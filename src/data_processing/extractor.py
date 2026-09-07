@@ -7,9 +7,9 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-def extract_features_rock_solid():
+def extract():
     data_path = Path("flows.txt.gz")
-    output_path = Path("data/host_features_rock_solid.parquet")
+    output_path = Path("data/host_features.parquet")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     stats = defaultdict(lambda: {
@@ -95,4 +95,4 @@ def extract_features_rock_solid():
         traceback.print_exc()
 
 if __name__ == "__main__":
-    extract_features_rock_solid()
+    extract()
