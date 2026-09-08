@@ -39,21 +39,28 @@
 
 **Требования:** Docker и Docker Compose
 
+1. Клонируйте репозиторий
+
 ```bash
-# 1. Клонируйте репозиторий
 git clone https://github.com/AndreyPreobrazhenskiy/pt_project
 cd pt_project
-
-# 2. Скачайте датасет
-wget https://lanl.ma.ic.ac.uk/data/cyber1/flows.txt.gz
-
-# 3. Запустите сервисы
-docker-compose up --build -d
-
-# 4. Откройте в браузере:
-#    - Web UI: http://localhost:8501
-#    - API Docs: http://localhost:8000/docs
 ```
+
+2. Скачайте датасет
+
+```bash
+wget https://lanl.ma.ic.ac.uk/data/cyber1/flows.txt.gz
+```
+
+3. Запустите сервисы
+
+```bash
+docker-compose up --build -d
+```
+
+4. Откройте в браузере:
+    - Web UI: http://localhost:8501
+    - API Docs: http://localhost:8000/docs
 
 ---
 
