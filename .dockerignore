@@ -1,0 +1,14 @@
+venv/
+.git/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+env.bak/
+venv.bak/
+flows.txt.gz
+.gitignore
+.DS_Store
+*.log

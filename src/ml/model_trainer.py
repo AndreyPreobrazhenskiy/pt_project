@@ -76,21 +76,32 @@ class HostBehaviorModel:
     def _generate_explanation(self, query_data, host_data):
         reasons = []
         
-        # проверка совпадения кластера
+        # 1. Совпадение кластера
         if host_data['cluster'] == query_data['cluster']:
             reasons.append(f"Находятся в одном кластере ({int(query_data['cluster'])}).")
         
-        # сравнение кол-ва портов (показывает разнообразие сервисов)
-        diff_ports = abs(query_data['unique_dst_ports'] - host_data['unique_dst_ports'])
-        if diff_ports <= 5:
+        # 2. Смысловая оценка масштаба узла
+        if query_data['unique_dst_hosts'] > 500 and host_data['unique_dst_hosts'] > 500:
+            reasons.append("Оба являются высоконагруженными инфраструктурными узлами (тысячи уникальных подключений).")
+        elif query_data['unique_dst_hosts'] < 20 and host_data['unique_dst_hosts'] < 20:
+            reasons.append("Оба являются типичными клиентскими рабочими станциями с ограниченным кругом общения.")
+        
+        # 3. Оценка портов
+        if query_data['unique_dst_ports'] > 10000 and host_data['unique_dst_ports'] > 10000:
+            reasons.append("Обслуживают огромное количество сетевых сервисов (>10 000 уникальных портов).")
+        elif abs(query_data['unique_dst_ports'] - host_data['unique_dst_ports']) <= 10:
             reasons.append(f"Используют схожее количество уникальных портов ({int(query_data['unique_dst_ports'])} vs {int(host_data['unique_dst_ports'])}).")
         
-        # сравнение доли TCP (показывает тип трафика)
+        # 4. Оценка протоколов
         if abs(query_data['tcp_ratio'] - host_data['tcp_ratio']) < 0.15:
             reasons.append(f"Имеют схожую долю TCP-трафика (~{query_data['tcp_ratio']:.1%}).")
+        
+        # 5. Оценка длительности сессий
+        if abs(query_data['avg_duration'] - host_data['avg_duration']) < 5:
+            reasons.append(f"Схожая средняя длительность сетевых сессий (~{query_data['avg_duration']:.1f} сек).")
             
         if not reasons:
-            reasons.append("Демонстрируют схожие общие паттерны интенсивности трафика (байты/пакеты/длительность сессий).")
+            reasons.append("Демонстрируют схожие общие паттерны интенсивности трафика (байты/пакеты/длительность).")
             
         return " ".join(reasons)
 
