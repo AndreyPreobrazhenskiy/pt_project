@@ -37,7 +37,11 @@
 
 ## Установка и запуск
 
-**Требования:** Docker и Docker Compose
+> **Важное примечание:** 
+> Файлы обработанных данных (`data/`) и обученные модели (`models/`) исключены из системы контроля версий через `.gitignore`. Для первого запуска их необходимо сгенерировать локально, после чего Docker-контейнеры подключат их через механизм `volumes`.
+
+**Требования:** Python 3.10+, Docker, Docker Compose
+
 
 1. Клонируйте репозиторий
 
@@ -46,19 +50,37 @@ git clone https://github.com/AndreyPreobrazhenskiy/pt_project
 cd pt_project
 ```
 
-2. Скачайте датасет
+2. Создайте и активируйте виртуальное окружение, установите зависимости
+
+```bash
+python3 -m venv venv
+source venv/bin/activate 
+pip install -r requirements.txt
+```
+
+3. Скачайте датасет
 
 ```bash
 wget https://lanl.ma.ic.ac.uk/data/cyber1/flows.txt.gz
 ```
 
-3. Запустите сервисы
+4. Запустите скрипты для генерации данных и моделей
+
+```bash
+# Извлечение признаков (создаст файл data/host_features.parquet)
+python src/data_processing/extractor.py
+
+# Обучение моделей (создаст файлы scaler.pkl, kmeans.pkl и др. в папке models/)
+python src/ml/model_trainer.py
+```
+
+5. Запустите сервисы
 
 ```bash
 docker-compose up --build -d
 ```
 
-4. Откройте в браузере:
+6. Откройте в браузере:
     - Web UI: http://localhost:8501
     - API Docs: http://localhost:8000/docs
 
